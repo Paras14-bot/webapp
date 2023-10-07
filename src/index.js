@@ -1,8 +1,13 @@
 const express = require("express");
 const engine = require("ejs-locals");
+const bodyParser = require("body-parser");
 
 const app = express();
 const HTTP_PORT = process.env.PORT || 3000;
+
+app.use(express.static("public"));
+// Middleware to parse form data
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // use ejs-locals for all ejs templates:
 app.engine("ejs", engine);
@@ -22,6 +27,19 @@ app.get("/about", (req, res) => {
 // contact page
 app.get("/contact", (req, res) => {
   res.render("pages/contact", { title: "Contact Page" });
+});
+
+app.post("/submit", (req, res) => {
+  // Capture form data
+  const { firstName, lastName, contactNumber, email, message } = req.body;
+
+  console.log("You entered the following: ");
+  console.log("Full name: ", firstName + " " + lastName);
+  console.log("Contact Number; ", contactNumber);
+  console.log("Email: ", email);
+  console.log("Message:", message);
+  // Redirect back to the home page
+  res.redirect("/");
 });
 
 // services
